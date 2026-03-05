@@ -14,9 +14,9 @@
       var el=document.getElementById('root');
       if(el){ el.innerHTML = '<div style="max-width:900px;margin:24px auto;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;">'
         + '<div style="font-weight:800;margin-bottom:8px;">Portal failed to load</div>'
-        + '<div style="white-space:pre-wrap;font-family:'Aptos Display';font-size:12px;color:#111827;">'
+        + '<div style="white-space:pre-wrap;font-family:'Aptos';font-size:14px;color:#111827;">'
         + msg + '</div>'
-        + '<div style="margin-top:10px;font-size:12px;color:#6b7280;">Tip: open Developer Tools → Console to see full error details.</div>'
+        + '<div style="margin-top:10px;font-size:14px;color:#6b7280;">Tip: open Developer Tools → Console to see full error details.</div>'
         + '</div>';
       }
     }catch(e){}
@@ -38,6 +38,7 @@
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root,[data-theme="light"]{
+  --font-sans:'Aptos','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
   --bg-primary:#FFFFFF;--bg-secondary:#f4f4f4;--bg-card:#FFFFFF;--bg-hover:#eef3f0;
   --bg-input:#FFFFFF;--bg-accent:#e7f6ee;--bg-accent2:#00834b;
   --border:#d7dde0;--border-light:#e5e9eb;--border-accent:#019656;
@@ -56,9 +57,9 @@
   --shadow:0 1px 3px rgba(0,0,0,.35);--shadow-lg:0 8px 22px rgba(0,0,0,.45);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-*{font-family:'Aptos Display' !important;}
-html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
-body{font-family:'Aptos Display';background:var(--bg-secondary);color:var(--text-primary);overflow-x:hidden;transition:background .3s,color .3s}
+*{font-family:var(--font-sans) !important;}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg-secondary);color:var(--text-primary);overflow-x:hidden;font-size:16px;line-height:1.45;transition:background .3s,color .3s}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--bg-secondary)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
@@ -75,7 +76,7 @@ select{-webkit-appearance:none;appearance:none;background-image:url("data:image/
 .fade-in{animation:fadeIn .3s ease both}
 .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transition:all .2s}
 .card:hover{box-shadow:var(--shadow-lg)}
-.label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px}
+.label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px}
 .demo-stripe{background:repeating-linear-gradient(45deg,#f59e0b,#f59e0b 10px,#fbbf24 10px,#fbbf24 20px)}
 @media print{
   body{background:#fff!important;color:#000!important}
@@ -103,7 +104,7 @@ a:hover{color:var(--brand-yellow)}
 </style>
 </head>
 <body>
-<div id="root" style="padding:24px;font-family:'Aptos Display';color:#444;">Loading portal…</div>
+<div id="root" style="padding:24px;font-family:var(--font-sans);color:#444;">Loading portal…</div>
 <script type="text/babel" data-type="module">
 /* ═══════════════════════════════════════════════════════════════════════════
    PROW — Compliance Portal  (FIXED v2)
@@ -144,6 +145,23 @@ const SC={
   "Not Started":"#94a3b8","In Progress":"#f59e0b","Implemented":"#0ea5e9","Under Review":"#8b5cf6","Compliant":"#16a34a","Non-Compliant":"#ef4444","Exception":"#f97316","Pending":"#64748b","Not Applicable":"#64748b"
 };
 const PC={"Critical":"#ef4444","High":"#f97316","Medium":"#eab308","Low":"#22c55e"};
+const prColor=(p)=>PC[p]||'#94a3b8';
+const secLabel=(sec)=>{
+  let s=String(sec||'').trim();
+  s=s.replace(/ANNEX\s*/ig,'').replace(/PHASE\s*\d+\s*:\s*/ig,'');
+  const m=s.match(/^Category\s+[^:]+:\s*(.*)$/i);
+  if(m){
+    const name=String(m[1]||'').trim();
+    if(name && !/^\.{3,}$/.test(name)) return name.slice(0,20);
+    return s.slice(0,20);
+  }
+  if(s.includes(':')){
+    const name=s.split(':').slice(1).join(':').trim();
+    if(name && !/^\.{3,}$/.test(name)) return name.slice(0,20);
+  }
+  return s.slice(0,20);
+};
+
 const SK="prow-portal-v1";
 const BK="prow-portal-branding";
 const SNAP_K="prow-portal-snapshots";
@@ -679,7 +697,7 @@ function RadarChart({labels,values,maxVal=5,size=240}){
         const a=angle(i),ex=cx+(r+18)*Math.cos(a),ey=cy+(r+18)*Math.sin(a);
         return <g key={i}>
           <line x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} stroke="var(--border)" strokeWidth=".5"/>
-          <text x={ex} y={ey} textAnchor="middle" dominantBaseline="central" fill="var(--text-secondary)" fontSize="9" fontFamily="DM Sans">{l.length>14?l.slice(0,13)+'…':l}</text>
+          <text x={ex} y={ey} textAnchor="middle" dominantBaseline="central" fill="var(--text-secondary)" fontSize="9" fontFamily="Aptos, Segoe UI, system-ui, Arial, sans-serif">{l.length>14?l.slice(0,13)+'…':l}</text>
         </g>;
       })}
       <polygon points={poly(dataPoints)} fill="rgba(245,210,72,.18)" stroke="#F5D248" strokeWidth="2"/>
@@ -693,6 +711,7 @@ function App(){
   const [userState,setUserState]=useState(()=>getInitState());
   const [activeFw,setActiveFw]=useState(ADGPO_FW);
   const [view,setView]=useState("dashboard");
+  const [dashFocusFw,setDashFocusFw]=useState(null);
   const [expandedItem,setExpandedItem]=useState(null);
   const [searchQ,setSearchQ]=useState("");
   const [filterStatus,setFilterStatus]=useState("All");
@@ -1434,7 +1453,24 @@ function App(){
   const sel={background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'5px 8px',fontSize:11,cursor:'pointer',outline:'none'};
   const inp={background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'5px 8px',fontSize:11,outline:'none',width:'100%'};
   const badge=(c)=>({display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:99,fontSize:10,fontWeight:600,background:c+'15',color:c});
-  const navBtn=(active)=>({padding:'7px 14px',borderRadius:6,fontSize:11,fontWeight:600,cursor:'pointer',border:'none',transition:'all .2s',background:active?'var(--brand-yellow)':'transparent',color:active?'var(--brand-charcoal)':'var(--text-muted)'});
+  const navBtn=(active)=>({
+    padding:'9px 14px',
+    borderRadius:8,
+    fontSize:12,
+    fontWeight:700,
+    cursor:'pointer',
+    border:'none',
+    transition:'all .2s',
+    background:active?'var(--brand-yellow)':'transparent',
+    color:active?'var(--brand-charcoal)':'var(--text-muted)',
+    display:'flex',
+    alignItems:'center',
+    gap:8,
+    flexWrap:'wrap',
+    lineHeight:1.25,
+    textAlign:'left',
+    minHeight:38
+  });
   const tabBtn=(active)=>({padding:'6px 10px',borderRadius:6,cursor:'pointer',border:'none',background:active?'var(--bg-card)':'transparent',color:active?'var(--text-primary)':'var(--text-muted)',display:'flex',alignItems:'center',gap:4,fontSize:11,fontWeight:active?600:400,boxShadow:active?'var(--shadow)':'none'});
   const fwStats=stats[activeFw]||{};
 
@@ -1470,7 +1506,7 @@ function App(){
   };
 
   return(
-    <div style={{fontFamily:"'Aptos Display'",background:'var(--bg-secondary)',color:'var(--text-primary)',minHeight:'100vh',fontSize:13}}>
+    <div style={{fontFamily:"'Aptos'",background:'var(--bg-secondary)',color:'var(--text-primary)',minHeight:'100vh',fontSize:13}}>
 
       {/* ── DEMO MODE BANNER ─────────────────────────────────────────────── */}
       {isDemoMode&&(
@@ -1761,7 +1797,7 @@ function App(){
       {/* ── NAV ──────────────────────────────────────────────────────────── */}
       <div className="no-print" style={{background:'var(--bg-card)',borderBottom:'1px solid var(--border)',padding:'6px 24px',display:'flex',gap:2,flexWrap:'wrap',alignItems:'center'}}>
         {NAV_ITEMS.map(n=>(
-          <button type="button" key={n.id} style={tabBtn(view===n.id)} onClick={()=>{if(n.id==="adgpo_suite"){setView("adgpo_suite");setExpandedItem(null);setSearchQ("");setFilterSection("All");setFilterStatus("All");setFilterPriority("All");}else setView(n.id);}}>{n.icon}<span>{n.label}</span></button>
+          <button type="button" key={n.id} style={tabBtn(view===n.id)} onClick={()=>{if(n.id==="adgpo_suite"){setView("adgpo_suite");setExpandedItem(null);setSearchQ("");setFilterSection("All");setFilterStatus("All");setFilterPriority("All");}else { if(n.id==='dashboard') setDashFocusFw(null); setView(n.id); }}}>{n.icon}<span>{n.label}</span></button>
         ))}
         <div style={{flex:1}}/>
         {perms.updateControls&&<button type="button" onClick={()=>setShowWizard(true)} style={{...tabBtn(false),background:'var(--brand-yellow)',color:'var(--brand-charcoal)',fontWeight:700,fontSize:10}}>{IC.play} Quick-Start</button>}
@@ -1783,7 +1819,7 @@ function App(){
         <div className="no-print" style={{background:'var(--bg-secondary)',padding:'8px 24px'}}>
           <div style={{display:'flex',gap:2,background:'var(--bg-card)',borderRadius:8,padding:2,border:'1px solid var(--border)',flexWrap:'wrap'}}>
             {FRAMEWORKS.map(fw=>(
-              <button type="button" key={fw} style={navBtn(activeFw===fw)} onClick={()=>{setActiveFw(fw);setExpandedItem(null);setFilterSection("All")}}>
+              <button type="button" key={fw} style={navBtn((view==='dashboard')?(dashFocusFw===fw):(activeFw===fw))} onClick={()=>{setActiveFw(fw);setExpandedItem(null);setFilterSection("All"); if(view==='dashboard') setDashFocusFw(fw);}}>
                 {fw}{stats[fw]&&<span style={{marginLeft:6,opacity:.6,fontSize:10}}>{SERVICE_FWS.includes(fw)?(Math.round((stats[fw].posture||0))+"%"):(stats[fw].compliance+"%")}</span>}
               </button>
             ))}
@@ -1817,11 +1853,136 @@ function App(){
               ))}
             </div>
 
+
+            {dashFocusFw&&(() => {
+              const fw=dashFocusFw;
+              const s=stats[fw]||{total:0,compliance:0,posture:null,avgMaturity:"0.0",stepProgress:0,byStatus:{},byPriority:{}};
+              const items=RAW[fw]||[];
+              const stOf=(id)=>userState[fw]?.[id]||{};
+              const prRank=(p)=>({Critical:4,High:3,Medium:2,Low:1}[p]||0);
+              const statusRank=(st)=>({"Not Started":3,"In Progress":2,"Partially Implemented":2,"Implemented":1,"Compliant":0,"Not Applicable":0}[st]??2);
+              const needsWork=items.filter(it=>{const st=stOf(it.i); return st.status && st.status!=='Compliant' && st.status!=='Not Applicable';});
+              const critical=needsWork.filter(it=>{const st=stOf(it.i); return (st.priority==='Critical'||st.priority==='High');})
+                .sort((a,b)=> (prRank(stOf(b.i).priority)-prRank(stOf(a.i).priority)) || (statusRank(stOf(b.i).status)-statusRank(stOf(a.i).status)) )
+                .slice(0,10);
+              // overlaps: normalize titles across services
+              const norm=(t)=>String(t||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+              const titleCounts={};
+              for(const f of FRAMEWORKS){
+                for(const it of (RAW[f]||[])){
+                  const k=norm(it.t);
+                  if(!k) continue;
+                  titleCounts[k]=(titleCounts[k]||0)+1;
+                }
+              }
+              const overlaps=items
+                .map(it=>({it,count:titleCounts[norm(it.t)]||1}))
+                .filter(x=>x.count>1)
+                .sort((a,b)=>b.count-a.count)
+                .slice(0,10);
+
+              const nextUp=needsWork
+                .map(it=>{
+                  const st=stOf(it.i);
+                  const mat=parseInt(st.maturity||0);
+                  return {it, pr:prRank(st.priority), st:st.status, mat};
+                })
+                .sort((a,b)=> (b.pr-a.pr) || (statusRank(b.st)-statusRank(a.st)) || (a.mat-b.mat))
+                .slice(0,12);
+
+              const pct=(SERVICE_FWS.includes(fw)&&s.posture!=null)?Math.round(s.posture):s.compliance;
+
+              return (
+                <div className="card" style={{padding:16,marginBottom:16}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12,flexWrap:'wrap'}}>
+                    <div>
+                      <div className="label">Service Dashboard</div>
+                      <div style={{fontSize:16,fontWeight:900,marginTop:2}}>{fw}</div>
+                      <div style={{fontSize:11,color:'var(--text-secondary)',marginTop:2}}>
+                        Focused view: critical items, next actions, and overlaps with other services.
+                      </div>
+                    </div>
+                    <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+                      <span style={{...badge(pct>=80?'#16a34a':pct>=50?'#f59e0b':'#ef4444')}}>{pct}%</span>
+                      <button type="button" onClick={()=>setDashFocusFw(null)} style={{...tabBtn(false),background:'var(--bg-input)',border:'1px solid var(--border)',fontSize:11}}>
+                        Clear selection
+                      </button>
+                      <button type="button" onClick={()=>{setActiveFw(fw);setView('checklist');setExpandedItem(null);setFilterSection('All');setFilterStatus('All');setFilterPriority('All');}} style={{...tabBtn(false),background:'var(--brand-yellow)',color:'var(--brand-charcoal)',fontWeight:800,fontSize:11}}>
+                        Open Checklist
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:12,marginTop:14}}>
+                    <div className="card" style={{padding:14}}>
+                      <div className="label">Critical / High — must complete</div>
+                      {critical.length?critical.map((it,idx)=>{
+                        const st=stOf(it.i);
+                        return (
+                          <div key={it.i} style={{padding:'8px 0',borderBottom:idx===critical.length-1?'none':'1px solid var(--border-light)'}}>
+                            <div style={{display:'flex',justifyContent:'space-between',gap:8}}>
+                              <div style={{fontSize:11,fontWeight:800}}>{it.i}</div>
+                              <span style={badge(prColor(st.priority))}>{st.priority}</span>
+                            </div>
+                            <div style={{fontSize:11,color:'var(--text-primary)',marginTop:2}}>{it.t}</div>
+                            <div style={{display:'flex',gap:6,alignItems:'center',marginTop:6,flexWrap:'wrap'}}>
+                              <span style={badge(SC[st.status]||'#94a3b8')}>{st.status}</span>
+                              {st.owner&&<span style={{fontSize:10,color:'var(--text-muted)'}}>Owner: {st.owner}</span>}
+                            </div>
+                          </div>
+                        );
+                      }):<div style={{fontSize:11,color:'var(--text-secondary)',marginTop:6}}>No Critical/High gaps in this demo selection.</div>}
+                    </div>
+
+                    <div className="card" style={{padding:14}}>
+                      <div className="label">Next up — highest impact gaps</div>
+                      {nextUp.length?nextUp.map((x,idx)=>{
+                        const it=x.it; const st=stOf(it.i);
+                        return (
+                          <div key={it.i} style={{padding:'8px 0',borderBottom:idx===nextUp.length-1?'none':'1px solid var(--border-light)'}}>
+                            <div style={{display:'flex',justifyContent:'space-between',gap:8}}>
+                              <div style={{fontSize:11,fontWeight:800}}>{it.i}</div>
+                              <span style={badge(prColor(st.priority))}>{st.priority}</span>
+                            </div>
+                            <div style={{fontSize:11,color:'var(--text-primary)',marginTop:2}}>{it.t}</div>
+                            <div style={{display:'flex',gap:6,alignItems:'center',marginTop:6,flexWrap:'wrap'}}>
+                              <span style={badge(SC[st.status]||'#94a3b8')}>{st.status}</span>
+                              <span style={{fontSize:10,color:'var(--text-muted)'}}>Maturity: {st.maturity||0}/5</span>
+                            </div>
+                          </div>
+                        );
+                      }):<div style={{fontSize:11,color:'var(--text-secondary)',marginTop:6}}>Nothing to prioritize (all compliant / N/A).</div>}
+                    </div>
+
+                    <div className="card" style={{padding:14}}>
+                      <div className="label">Common with other services</div>
+                      {overlaps.length?overlaps.map((x,idx)=>{
+                        const it=x.it; const st=stOf(it.i);
+                        return (
+                          <div key={it.i} style={{padding:'8px 0',borderBottom:idx===overlaps.length-1?'none':'1px solid var(--border-light)'}}>
+                            <div style={{display:'flex',justifyContent:'space-between',gap:8}}>
+                              <div style={{fontSize:11,fontWeight:800}}>{it.i}</div>
+                              <span style={{fontSize:10,color:'var(--text-muted)'}}>{x.count} services</span>
+                            </div>
+                            <div style={{fontSize:11,color:'var(--text-primary)',marginTop:2}}>{it.t}</div>
+                            <div style={{display:'flex',gap:6,alignItems:'center',marginTop:6,flexWrap:'wrap'}}>
+                              <span style={badge(SC[st.status]||'#94a3b8')}>{st.status||'—'}</span>
+                              <span style={badge(prColor(st.priority))}>{st.priority||'—'}</span>
+                            </div>
+                          </div>
+                        );
+                      }):<div style={{fontSize:11,color:'var(--text-secondary)',marginTop:6}}>No overlaps detected based on control titles.</div>}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:12,marginBottom:20}}>
               {FRAMEWORKS.map(fw=>{
                 const s=stats[fw];if(!s)return null;
                 const secs=[...new Set(RAW[fw].map(i=>i.sec))];
-                const radarLabels=secs.map(sec=>sec.replace(/ANNEX |PHASE \d+: /g,'').slice(0,20));
+                const radarLabels=secs.map(sec=>secLabel(sec));
                 const radarVals=secs.map(sec=>{
                   const items=RAW[fw].filter(i=>i.sec===sec);
                   return items.reduce((sum,i)=>sum+(parseInt(userState[fw][i.i]?.maturity)||0),0)/(items.length||1);
@@ -1829,7 +1990,7 @@ function App(){
                 return(
                   <div key={fw} className="card" style={{padding:16,cursor:'pointer'}} onClick={()=>{setActiveFw(fw);setView("checklist");setExpandedItem(null);setFilterSection("All");setFilterStatus("All");setFilterPriority("All");}}>
                     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-                      <span style={{fontSize:13,fontWeight:700}}>{fw}</span>
+                      <span style={{fontSize:13,fontWeight:800,flex:1,minWidth:0,whiteSpace:'normal',lineHeight:1.2}}>{fw}</span>
                       <span style={{...badge(((SERVICE_FWS.includes(fw)&&s.posture!=null)?Math.round(s.posture):s.compliance)>=80?'#16a34a':((SERVICE_FWS.includes(fw)&&s.posture!=null)?Math.round(s.posture):s.compliance)>=50?'#f59e0b':'#ef4444')}}>{(SERVICE_FWS.includes(fw)&&s.posture!=null)?Math.round(s.posture):s.compliance}%</span>
                     </div>
                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12}}>
@@ -1852,7 +2013,8 @@ function App(){
               })}
             </div>
 
-            <div className="card" style={{padding:16,marginBottom:16}}>
+            {dashFocusFw&&(
+                        <div className="card" style={{padding:16,marginBottom:16}}>
               <div className="label" style={{marginBottom:10}}>{activeFw} — Section Breakdown</div>
               {sections.filter(s=>s!=="All").map(sec=>{
                 const items=RAW[activeFw].filter(i=>i.sec===sec);
@@ -1869,6 +2031,9 @@ function App(){
                 );
               })}
             </div>
+            )}
+
+            
 
             {snapshots.length>0&&(
               <div className="card" style={{padding:16}}>
