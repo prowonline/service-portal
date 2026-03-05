@@ -1394,15 +1394,15 @@ function App(){
       <div className="card" style={{width:'100%',maxWidth:420,padding:24}}>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
           <div style={{background:'transparent',borderRadius:8,width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center'}}><img src="PROW%20Logo.svg" alt="PROW" style={{height:22,width:'auto'}}/></div>
-          <div><div style={{fontWeight:800,fontSize:15}}>PROW — Compliance Portal</div><div style={{fontSize:10,color:'var(--text-muted)'}}>First-run setup</div></div>
+          <div><div style={{fontWeight:800,fontSize:15}}>PROW — Compliance Portal</div><div style={{fontSize:10,color:'var(--text-muted)'}}>First-Run Setup</div></div>
         </div>
         <p style={{fontSize:11,color:'var(--text-secondary)',marginBottom:16,background:'var(--bg-accent)',padding:10,borderRadius:6,borderLeft:'3px solid var(--brand-yellow)'}}>Create your admin account to get started. You can add more users and workspaces after setup.</p>
         <label className="label">Full Name</label>
-        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="Your full name" value={authForm.name} onChange={e=>setAuthForm({...authForm,name:e.target.value})}/>
+        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="Your Full Name" value={authForm.name} onChange={e=>setAuthForm({...authForm,name:e.target.value})}/>
         <label className="label">Username</label>
-        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="username" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})}/>
+        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="Choose a Username" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})}/>
         <label className="label">Password</label>
-        <input type="password" style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:16}} placeholder="Minimum 8 characters" value={authForm.password} onChange={e=>setAuthForm({...authForm,password:e.target.value})}/>
+        <input type="password" style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:16}} placeholder="Minimum 8 Characters" value={authForm.password} onChange={e=>setAuthForm({...authForm,password:e.target.value})}/>
         <button type="button" onClick={doSetup} style={{width:'100%',padding:'10px 12px',border:'none',borderRadius:6,background:'var(--brand-yellow)',fontWeight:700,cursor:'pointer',fontSize:13}}>Create Admin Account →</button>
       </div>
     </div>
@@ -1413,10 +1413,10 @@ function App(){
       <div className="card" style={{width:'100%',maxWidth:420,padding:24}}>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
           <div style={{background:'transparent',borderRadius:8,width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center'}}><img src="PROW%20Logo.svg" alt="PROW" style={{height:22,width:'auto'}}/></div>
-          <div><div style={{fontWeight:800,fontSize:15}}>PROW — Compliance Portal</div><div style={{fontSize:10,color:'var(--text-muted)'}}>Sign in to continue</div></div>
+          <div><div style={{fontWeight:800,fontSize:15}}>PROW — Compliance Portal</div><div style={{fontSize:10,color:'var(--text-muted)'}}>Sign In to Continue</div></div>
         </div>
         <label className="label">Username</label>
-        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="username" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})} onKeyDown={e=>e.key==='Enter'&&doLogin()}/>
+        <input style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:10}} placeholder="Your Username" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})} onKeyDown={e=>e.key==='Enter'&&doLogin()}/>
         <label className="label">Password</label>
         <input type="password" style={{background:'var(--bg-input)',border:'1px solid var(--border)',color:'var(--text-primary)',borderRadius:6,padding:'8px 10px',fontSize:12,outline:'none',width:'100%',marginBottom:16}} placeholder="Password" value={authForm.password} onChange={e=>setAuthForm({...authForm,password:e.target.value})} onKeyDown={e=>e.key==='Enter'&&doLogin()}/>
         <button type="button" onClick={doLogin} style={{width:'100%',padding:'10px 12px',border:'none',borderRadius:6,background:'var(--brand-yellow)',fontWeight:700,cursor:'pointer',fontSize:13}}>Sign In →</button>
